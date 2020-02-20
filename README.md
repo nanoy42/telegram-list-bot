@@ -1,5 +1,12 @@
 # Telegram list bot
 
+ * [Introduction](#introduction)
+ * [Installation](#installation)
+ * [Configuration](#configuration)
+ * [Screenshots](#screenshots)
+ * [Under the hood](#under-the-hood)
+ * [FAQ](#faq)
+
 ## Introduction
 
 Telegram list bot is small telegram bot useful to store small to medium lists on a small number of chats.
