@@ -1,0 +1,6 @@
+DELIMITER = ";"
+START_MESSAGE = "I'm a bot storing lists. Type /help for help."
+LIST_MESSAGE_BEGIN = "List :"
+LIST_MESSAGE_BEFORE = "\n- "
+LIST_MESSAGE_AFTER = ""
+LIST_MESSAGE_EMPTY = "Nothing in the list."
