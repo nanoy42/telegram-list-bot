@@ -182,7 +182,7 @@ class Bot:
         if chat_id in self.chats:
             if chat_id not in self.my_list:
                 self.my_list[chat_id] = []
-            regexp = re.compile("/add.* (.*)")
+            regexp = re.compile("/add[^ ]* (.*)")
             argument = regexp.search(update.message.text).group(1)
             for item in argument.split(DELIMITER):
                 self.my_list[chat_id].append(item)
