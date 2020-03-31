@@ -26,22 +26,17 @@ Some application folows :
 
 ## Installation
 
-You will need the https://github.com/python-telegram-bot/python-telegram-bot package. You can install it with 
-
-```
-pip3 install python-telegram-bot
-```
-
-If you want to use the daemonized version, you will also need the daemons library :
-
-```
-pip3 install daemons
-```
 
 You can install all the dependencies with the following command :
 
 ```
-pip3 install -r requirements.txt
+pipenv install --ignore-pipfile
+```
+
+You can install all dependencies + dev dependencies with the following command :
+
+```
+pipenv install --dev --pre
 ```
 
 Then you can clone the repository and copy the `config.ini.example` into `config.ini`. Make sure that the righs are good (the user executing the bot will need write permissions).
