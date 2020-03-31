@@ -116,3 +116,4 @@ dmypy.json
 list.json
 config.ini
 telegram-list-bot.log
+local_variables.py
