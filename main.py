@@ -1,5 +1,5 @@
 # Telegram list Bot - Small bot storing lists
-# Copyright (C) 2020 Yoann Pietri
+# Copyright (C) 2020-2021 Yoann Pietri
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,13 +54,13 @@ except:
 
 
 class Bot:
-    """"
+    """ "
     Define a wrapper for telegram-list-bot. Defines handlers for commands.
     """
 
     def __init__(self, directory=None):
         """Initilise the bot
-        
+
         Args:
             directory (string, optional): Where to find list.json and config.ini files. Defaults to None.
         """
@@ -97,8 +97,7 @@ class Bot:
         self.dispatcher.add_handler(self.help_handler)
 
     def load_config(self):
-        """Load configuration file. The configuration file is the config.ini file in code directory.
-        """
+        """Load configuration file. The configuration file is the config.ini file in code directory."""
         config = configparser.ConfigParser()
         try:
             config.read("{}/config.ini".format(self.directory))
@@ -120,8 +119,7 @@ class Bot:
         logging.info("Configuration loaded")
 
     def write_list_to_file(self):
-        """Write list to file, which is list.json in code directory.
-        """
+        """Write list to file, which is list.json in code directory."""
         filename = "{}/list.json".format(self.directory)
         try:
             with open(filename, "w") as outfile:
@@ -130,8 +128,7 @@ class Bot:
             logging.error("Could not write to file {}".format(filename))
 
     def read_list_from_file(self):
-        """Read list from file, which is list.json in code directory.
-        """
+        """Read list from file, which is list.json in code directory."""
         filename = "{}/list.json".format(self.directory)
         try:
             with open(filename) as json_file:
@@ -147,7 +144,7 @@ class Bot:
         This command do one of the two followings thing :
             - send a small summary if the chat id is in the chat list
             - send a message explaning that it won't work on this chan otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -173,7 +170,7 @@ class Bot:
         This command do one of the two followings thing :
             - identify argument, split in items regarding the DELIMITER and adding them to the correct list if the chat is authorised
             - do nothing otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -194,7 +191,7 @@ class Bot:
         This command do one of the two followings thing :
             - identify argument, split in items regarding the DELIMITER and removing them from the correct list if the chat is authorised
             - do nothing otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -216,7 +213,7 @@ class Bot:
         This command do one of the two followings thing :
             - print the list if the chat is authorised
             - do nothing otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -239,7 +236,7 @@ class Bot:
         This command do one of the two followings thing :
             - empty the list if the chat is authorised
             - do nothing otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -256,7 +253,7 @@ class Bot:
         This command do one of the two followings thing :
             - print possible commands if the chat is authorised
             - say the bot can't work on this chan and print the id otherwise
-        
+
         Args:
             update (dict): message that triggered the handler
             context (CallbackContext): context
@@ -278,8 +275,7 @@ class Bot:
             )
 
     def start_bot(self):
-        """Start the bot.
-        """
+        """Start the bot."""
         self.updater.start_polling()
 
 
@@ -302,7 +298,7 @@ if __name__ == "__main__":
         class ListBotDaemon(run.RunDaemon):
             def __init__(self, directory, *args, **kwargs):
                 """Initialise the daemon
-                
+
                 Args:
                     directory (string): directory to pass to the bot
                 """
@@ -310,8 +306,7 @@ if __name__ == "__main__":
                 super().__init__(*args, **kwargs)
 
             def run(self):
-                """Run method (called when daemon starts).
-                """
+                """Run method (called when daemon starts)."""
                 bot = Bot(self.directory)
                 bot.start_bot()
 
