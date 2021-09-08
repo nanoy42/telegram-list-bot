@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1c9c0e808e08cad700ef95897b34788b2f84630922f639c9573ba6641e6f2019"
+            "sha256": "13ad66ae5ae110cded9374f968189fe917da8c84ce8b39c7067b64a3c8b87a87"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -42,6 +42,13 @@
             ],
             "index": "pypi",
             "version": "==1.3.2"
+        },
+        "docopt": {
+            "hashes": [
+                "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"
+            ],
+            "index": "pypi",
+            "version": "==0.6.2"
         },
         "python-telegram-bot": {
             "hashes": [

@@ -18,11 +18,18 @@ Some functionnalities of the bot :
  * print the list;
  * empty all list;
  * change the way the items are displayed (and some basic personalization)
+ * shopping mode
 
 Some application folows : 
 
  * todo-list
  * grocery list
+
+### Shopping mode
+
+The shopping mode was introduced in version 1.0 as an experimental feature.
+
+It is a mode where you can interactively delete items from the list (when you are making your shopping), using a single message in the telegram chat.
 
 ## Installation
 
@@ -49,7 +56,7 @@ You will also need a telegram bot, basically it's just talking with @BotFather, 
 You then need to configure your bot. The main part of the configuration is located in the config.ini file, where there are two paramters in the `[Global]` section :
 
 | Parameter | Description                                                                | Default value                             |
-|-----------|----------------------------------------------------------------------------|-------------------------------------------|
+| --------- | -------------------------------------------------------------------------- | ----------------------------------------- |
 | token     | token of your telegram bot                                                 | 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11 |
 | chats     | list of chat ids, spearated by commas, where the bot is authorized to work | 0,1                                       |
 
@@ -72,7 +79,7 @@ python3 main.py debug
 If you want more control, and small personalization, you can edit the file `variables.py`. 6 variables are stored there :
 
 | Variable            | Descritpion                                              | Default value                                     |
-|---------------------|----------------------------------------------------------|---------------------------------------------------|
+| ------------------- | -------------------------------------------------------- | ------------------------------------------------- |
 | DELIMITER           | Char used to split arguments of /add and /remove command | `";"`                                             |
 | START_MESSAGE       | Message displayed on the /start command                  | `"I'm a bot storing lists. Type /help for help."` |
 | LIST_MESSAGE_BEGIN  | Begin of messaage for /print command                     | `"List: "`                                        |
@@ -90,7 +97,7 @@ There are 3 ways to use the bot:
 
 #### Daemon mode
 
-For this, you will need the pip package `deamons` to be installed. You can then use the thre following commands :
+For this, you will need the pip package `daemons` to be installed. You can then use the thre following commands :
 
 ```
 python3 main.py start
@@ -133,6 +140,8 @@ You can change the default display by editing the `variables.py` file.
 
 ![Screenshot3](https://images.nanoy.fr/telegram-list-bot/screenshot3.png)
 
+![Screenshot4](https://images.nanoy.fr/telegram-list-bot/screenshot4.png)
+
 You can also change the delimiter in the `variables.py` file.
 ## Under the hood
 
@@ -153,6 +162,7 @@ start - Small description of the bot
 add - Add one or more item
 remove - Remove one or more item
 print - Display list
+shopping - Start shopping mode
 flush - Empty list
 help - Display help message
 ```

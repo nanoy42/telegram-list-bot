@@ -43,7 +43,7 @@ import sys
 
 import telegram
 from docopt import docopt
-from telegram.ext import CommandHandler, Updater
+from telegram.ext import CommandHandler, Updater, CallbackQueryHandler
 
 from variables import *
 
@@ -51,6 +51,9 @@ try:
     from local_variables import *
 except:
     pass
+
+END_WORD = "end"
+RESERVED_KEYWORDS = [END_WORD]
 
 
 class Bot:
@@ -80,6 +83,9 @@ class Bot:
 
         self.dispatcher = self.updater.dispatcher
         self.my_list = {}  # dict containing the chat id as key and list as value
+        self.shopping_modes = (
+            {}
+        )  # dict containing the chat ids as key and the shopping mode message id as value
         self.read_list_from_file()
 
         self.start_handler = CommandHandler("start", self.start)
@@ -88,6 +94,8 @@ class Bot:
         self.print_handler = CommandHandler("print", self.print_list)
         self.flush_handler = CommandHandler("flush", self.flush)
         self.help_handler = CommandHandler("help", self.help)
+        self.shopping_handler = CommandHandler("shopping", self.shopping)
+        self.callback_handler = CallbackQueryHandler(self.callback)
 
         self.dispatcher.add_handler(self.start_handler)
         self.dispatcher.add_handler(self.add_handler)
@@ -95,6 +103,8 @@ class Bot:
         self.dispatcher.add_handler(self.print_handler)
         self.dispatcher.add_handler(self.flush_handler)
         self.dispatcher.add_handler(self.help_handler)
+        self.dispatcher.add_handler(self.shopping_handler)
+        self.dispatcher.add_handler(self.callback_handler)
 
     def load_config(self):
         """Load configuration file. The configuration file is the config.ini file in code directory."""
@@ -149,7 +159,6 @@ class Bot:
             update (dict): message that triggered the handler
             context (CallbackContext): context
         """
-        print(update)
         chat_id = update.effective_chat.id
         if chat_id in self.chats:
             if START_MESSAGE:
@@ -182,7 +191,13 @@ class Bot:
             regexp = re.compile("/add[^ ]* (.*)")
             argument = regexp.search(update.message.text).group(1)
             for item in argument.split(DELIMITER):
-                self.my_list[chat_id].append(item)
+                if item in RESERVED_KEYWORDS:
+                    context.bot.send_message(
+                        text=f"The word '{item}' is a reserved keyword.",
+                        chat_id=chat_id,
+                    )
+                else:
+                    self.my_list[chat_id].append(item)
             self.write_list_to_file()
 
     def remove(self, update, context):
@@ -262,7 +277,7 @@ class Bot:
         if chat_id in self.chats:
             context.bot.send_message(
                 chat_id=chat_id,
-                text="Telegram list bot\nA simple bot storing list \n\n/start : Summary of the bot.\n/add argument : Add argument to list. Several items may be added at the sane time by separating them with {}.\n/remove argument : Remove argument from list. Several items may be removed at the same time by separating them with {}.\n/print : Print list.\n/flush : Empty list.".format(
+                text="Telegram list bot\nA simple bot storing list \n\n/start : Summary of the bot.\n/add argument : Add argument to list. Several items may be added at the sane time by separating them with {}.\n/remove argument : Remove argument from list. Several items may be removed at the same time by separating them with {}.\n/print : Print list.\n/shopping : Start the shopping mode\n/flush : Empty list.".format(
                     DELIMITER, DELIMITER
                 ),
             )
@@ -273,6 +288,75 @@ class Bot:
                     chat_id
                 ),
             )
+
+    def shopping_keyboard(self, chat_id):
+        buttons = [
+            [telegram.InlineKeyboardButton(item, callback_data=item)]
+            for item in self.my_list[chat_id]
+        ]
+        buttons.append(
+            [telegram.InlineKeyboardButton("End shopping mode", callback_data=END_WORD)]
+        )
+        markup = telegram.InlineKeyboardMarkup(buttons)
+        return markup
+
+    def shopping(self, update, context):
+        chat_id = update.effective_chat.id
+        if chat_id in self.chats:
+            if chat_id in self.shopping_modes:
+                # The shopping modes was already activated. Remove ancient and create new.
+                context.bot.edit_message_text(
+                    text=f"{len(self.my_list[chat_id])} items left in list. Shopping mode was manually ended.",
+                    chat_id=chat_id,
+                    message_id=self.shopping_modes[chat_id],
+                )
+                del self.shopping_modes[chat_id]
+            if self.my_list[chat_id]:
+                message = context.bot.send_message(
+                    chat_id=chat_id,
+                    text=f"Shopping mode started. {len(self.my_list[chat_id])} items in the list",
+                    reply_markup=self.shopping_keyboard(chat_id),
+                )
+                self.shopping_modes[chat_id] = message.message_id
+            else:
+                context.bot.send_message(
+                    chat_id=chat_id, text="No item in list. Can't start shopping mode."
+                )
+
+    def callback(self, update, context):
+        chat_id = update.effective_chat.id
+        data = update.callback_query.data
+        if chat_id in self.chats:
+
+            # Verify that shopping mode is enabled for this chat
+            if chat_id in self.shopping_modes:
+                if data == END_WORD:
+                    context.bot.edit_message_text(
+                        text=f"{len(self.my_list[chat_id])} items left in list. Shopping mode was manually ended.",
+                        chat_id=chat_id,
+                        message_id=self.shopping_modes[chat_id],
+                    )
+                    del self.shopping_modes[chat_id]
+                else:
+                    try:
+                        self.my_list[chat_id].remove(data)
+                    except:
+                        pass
+                    if self.my_list[chat_id]:
+                        context.bot.edit_message_text(
+                            text=f"Shopping mode started. {len(self.my_list[chat_id])} items in the list",
+                            chat_id=chat_id,
+                            message_id=self.shopping_modes[chat_id],
+                            reply_markup=self.shopping_keyboard(chat_id),
+                        )
+                    else:
+                        context.bot.edit_message_text(
+                            text=f"No item left in list. Shopping mode ended.",
+                            chat_id=chat_id,
+                            message_id=self.shopping_modes[chat_id],
+                        )
+                        del self.shopping_modes[chat_id]
+                    self.write_list_to_file()
 
     def start_bot(self):
         """Start the bot."""

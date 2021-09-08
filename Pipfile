@@ -12,6 +12,7 @@ rope = "*"
 [packages]
 python-telegram-bot = "*"
 daemons = "*"
+docopt = "*"
 
 [pipenv]
 allow_prereleases = true
