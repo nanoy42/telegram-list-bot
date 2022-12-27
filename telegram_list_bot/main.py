@@ -364,7 +364,7 @@ class Bot:
 
 
 if __name__ == "__main__":
-    arguments = docopt(__doc__, version="Telegram List Bot 0.9")
+    arguments = docopt(__doc__, version="Telegram List Bot 1.1.0")
     daemon = arguments["start"] or arguments["stop"] or arguments["restart"]
     debug = arguments["debug"]
 

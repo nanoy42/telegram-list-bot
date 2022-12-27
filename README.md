@@ -37,13 +37,13 @@ It is a mode where you can interactively delete items from the list (when you ar
 You can install all the dependencies with the following command :
 
 ```
-pipenv install --ignore-pipfile
+poetry install
 ```
 
 You can install all dependencies + dev dependencies with the following command :
 
 ```
-pipenv install --dev --pre
+poetry install --with dev
 ```
 
 Then you can clone the repository and copy the `config.ini.example` into `config.ini`. Make sure that the righs are good (the user executing the bot will need write permissions).
